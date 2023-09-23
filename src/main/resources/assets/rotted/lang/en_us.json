@@ -1,0 +1,24 @@
+{
+  "item.rotted.rotten_brain": "Rotten Brain",
+  "item.rotted.marine_spawn_egg": "Marine Spawn Egg",
+  "item.rotted.firefighter_spawn_egg": "Firefighter Spawn Egg",
+  "item.rotted.doctor_spawn_egg": "Doctor Spawn Egg",
+  "item.rotted.farmer_spawn_egg": "Farmer Spawn Egg",
+  "item.rotted.miner_spawn_egg": "Miner Spawn Egg",
+
+
+  "entity.rotted.marine": "Marine Zombie",
+  "entity.rotted.firefighter": "Firefighter Zombie",
+  "entity.rotted.doctor": "Doctor Zombie",
+  "entity.rotted.farmer": "Farmer Zombie",
+  "entity.rotted.miner": "Miner Zombie",
+
+  "effect.rotted.contagion": "Contagion",
+
+  "subtitles.rotted.entity.rotted_zombie.ambient": "Zombie growls",
+  "subtitles.rotted.entity.rotted_zombie.death": "Zombie dies",
+  "subtitles.rotted.entity.rotted_zombie.hurt": "Zombie hurts",
+
+
+  "itemGroup.rotted.item": "Rotted"
+}
