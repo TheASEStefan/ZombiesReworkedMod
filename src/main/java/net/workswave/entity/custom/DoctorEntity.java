@@ -134,6 +134,7 @@ public class DoctorEntity extends RottedZombie implements GeoEntity, RangedAttac
             this.setItemSlot(EquipmentSlot.MAINHAND,PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), potion));
         }
         super.tick();
+
     }
 
     @Nullable
@@ -203,7 +204,6 @@ public class DoctorEntity extends RottedZombie implements GeoEntity, RangedAttac
 
         this.level().addFreshEntity(thrownpotion);
     }
-
 
     private Potion getBuffPotion(){
         Random rand = new Random();

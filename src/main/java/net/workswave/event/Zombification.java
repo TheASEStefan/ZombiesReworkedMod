@@ -1,6 +1,8 @@
 package net.workswave.event;
 
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -35,20 +37,20 @@ public class Zombification {
                 ItemStack head = player.getItemBySlot(EquipmentSlot.HEAD);
                 ItemStack chest = player.getItemBySlot(EquipmentSlot.CHEST);
                 ItemStack hand = player.getItemBySlot(EquipmentSlot.MAINHAND);
-                ItemStack offhand = player.getItemBySlot(EquipmentSlot.OFFHAND);
                 assert adventurerEntity != null;
                 adventurerEntity.setItemSlot(EquipmentSlot.HEAD, head);
                 adventurerEntity.setItemSlot(EquipmentSlot.CHEST, chest);
                 adventurerEntity.setItemSlot(EquipmentSlot.MAINHAND, hand);
-                adventurerEntity.setItemSlot(EquipmentSlot.OFFHAND, offhand);
                 adventurerEntity.moveTo(event.getEntity().getX(), event.getEntity().getY(), event.getEntity().getZ());
                 adventurerEntity.setCustomName(name);
                 adventurerEntity.setDropChance(EquipmentSlot.HEAD, 0);
                 adventurerEntity.setDropChance(EquipmentSlot.CHEST, 0);
                 adventurerEntity.setDropChance(EquipmentSlot.MAINHAND, 0);
-                adventurerEntity.setDropChance(EquipmentSlot.OFFHAND, 0);
                 world.addFreshEntity(adventurerEntity);
                 adventurerEntity.playSound(SoundEvents.ZOMBIE_INFECT);
+                if (player.level() instanceof ServerLevel server) {
+                    server.sendParticles(ParticleTypes.EXPLOSION, player.getX(), player.getY() + 1, player.getZ(), 4, 0.4, 1.0, 0.4, 0);
+                }
             }
             else if (entity instanceof Villager villager && villager.hasEffect(RottedMobEffects.CONTAGION.get()) && !world.isClientSide && (RottedConfig.SERVER.villager_assimilation.get() == true)) {
                 ZombieVillager zombieVillager = EntityType.ZOMBIE_VILLAGER.create(world);
@@ -56,6 +58,9 @@ public class Zombification {
                 zombieVillager.moveTo(event.getEntity().getX(), event.getEntity().getY(), event.getEntity().getZ());
                 world.addFreshEntity(zombieVillager);
                 zombieVillager.playSound(SoundEvents.ZOMBIE_INFECT);
+                if (villager.level() instanceof ServerLevel server) {
+                    server.sendParticles(ParticleTypes.EXPLOSION, villager.getX(), villager.getY() + 1, villager.getZ(), 4, 0.4, 1.0, 0.4, 0);
+                }
             }
         }
     }

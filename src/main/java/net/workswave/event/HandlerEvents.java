@@ -14,10 +14,12 @@ public class HandlerEvents {
 
     @SubscribeEvent
     public static void SpawnPlacement(SpawnPlacementRegisterEvent event){
-        event.register(EntityRegistry.FIREFIGHTER.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,RottedZombie::checkMonsterRottedZombieRules, SpawnPlacementRegisterEvent.Operation.AND);
         event.register(EntityRegistry.FARMER.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,RottedZombie::checkMonsterRottedZombieRules, SpawnPlacementRegisterEvent.Operation.AND);
+        event.register(EntityRegistry.SHIELDER.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,RottedZombie::checkMonsterRottedZombieRules, SpawnPlacementRegisterEvent.Operation.AND);
         event.register(EntityRegistry.DOCTOR.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,RottedZombie::checkMonsterRottedZombieRules, SpawnPlacementRegisterEvent.Operation.AND);
         event.register(EntityRegistry.MINER.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,RottedZombie::checkMonsterRottedZombieRules, SpawnPlacementRegisterEvent.Operation.AND);
+        event.register(EntityRegistry.ADVENTURER.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,RottedZombie::checkMonsterRottedZombieRules, SpawnPlacementRegisterEvent.Operation.AND);
+        event.register(EntityRegistry.FLUSK.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,RottedZombie::checkMonsterRottedZombieRules, SpawnPlacementRegisterEvent.Operation.AND);
         event.register(EntityRegistry.MARINE.get(), SpawnPlacements.Type.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, RottedZombie::checkMonsterRottedZombieRules, SpawnPlacementRegisterEvent.Operation.AND);
 
     }

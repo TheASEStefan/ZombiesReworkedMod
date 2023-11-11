@@ -15,7 +15,6 @@ import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.entity.monster.WitherSkeleton;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -26,7 +25,6 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.workswave.config.RottedConfig;
 import net.workswave.entity.ai.CustomMeleeAttackGoal;
-import net.workswave.entity.ai.LeapGoal;
 import net.workswave.entity.categories.RottedZombie;
 import net.workswave.registry.ItemRegistry;
 import net.workswave.registry.SoundRegistry;
@@ -40,6 +38,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 
+
 public class MinerEntity extends RottedZombie implements GeoEntity {
 
     private int loot = 0;
@@ -50,7 +49,9 @@ public class MinerEntity extends RottedZombie implements GeoEntity {
     public MinerEntity(EntityType<? extends Monster> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         this.xpReward = 10;
+
     }
+
 
     @Override
     public boolean doHurtTarget(Entity entity) {
@@ -58,6 +59,7 @@ public class MinerEntity extends RottedZombie implements GeoEntity {
         f = f + EnchantmentHelper.getDamageBonus(this.getMainHandItem(), ((LivingEntity) entity).getMobType()) / 2;
         return super.doHurtTarget(entity);
     }
+
     @Override
     protected void registerGoals() {
         super.registerGoals();
@@ -79,6 +81,7 @@ public class MinerEntity extends RottedZombie implements GeoEntity {
         this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.0D, false));
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(1, (new HurtByTargetGoal(this)).setAlertOthers(RottedZombie.class));
+
     }
 
     @Nullable
@@ -94,36 +97,38 @@ public class MinerEntity extends RottedZombie implements GeoEntity {
 
     }
 
+
+
     protected void populateDefaultEquipmentSlots(RandomSource pRandom, DifficultyInstance pDifficulty) {
         super.populateDefaultEquipmentSlots(pRandom, pDifficulty);
-
-        int i = pRandom.nextInt(5);
-        this.loot = 0;
-        if (i == 0) {
-            this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.STONE_PICKAXE));
-            this.loot = 1;
-
-
-        }
-        else if (i == 1) {
-            this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.IRON_PICKAXE));
-            this.loot = 2;
-
-        }
-        else if (i == 2) {
-            this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.GOLDEN_PICKAXE));
-            this.loot = 3;
-
-        }
-        else if (i == 3) {
-            this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.DIAMOND_PICKAXE));
-            this.loot = 4;
-
-        }
-        else {
-            this.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
+            int i = pRandom.nextInt(5);
             this.loot = 0;
-        }
+            if (i == 0) {
+                this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.STONE_PICKAXE));
+                this.loot = 1;
+
+            }
+            else if (i == 1) {
+                this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.IRON_PICKAXE));
+                this.loot = 2;
+
+            }
+            else if (i == 2) {
+                this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.GOLDEN_PICKAXE));
+                this.loot = 3;
+
+            }
+            else if (i == 3) {
+                this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.DIAMOND_PICKAXE));
+                this.loot = 4;
+
+            }
+            else {
+                this.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
+                this.loot = 0;
+            }
+
+
 
     }
     @Nullable
@@ -136,7 +141,6 @@ public class MinerEntity extends RottedZombie implements GeoEntity {
     }
 
 
-
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controller2) {
         controller2.add(
@@ -146,13 +150,12 @@ public class MinerEntity extends RottedZombie implements GeoEntity {
                         event.getController().setAnimationSpeed(1D);
                         return event.setAndContinue(RawAnimation.begin().thenLoop("aggression"));
                     }
-                    if(!event.isMoving()){
-                        event.setAndContinue(RawAnimation.begin().thenLoop("idle"));
+                    if(!event.isMoving()) {
+                        return event.setAndContinue(RawAnimation.begin().thenLoop("idle"));
                     }
                     return PlayState.CONTINUE;
                 }));
     }
-
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
@@ -162,6 +165,7 @@ public class MinerEntity extends RottedZombie implements GeoEntity {
     public MobType getMobType() {
         return MobType.UNDEAD;
     }
+
 
 
     @Nullable

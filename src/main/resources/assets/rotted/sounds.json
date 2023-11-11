@@ -26,6 +26,20 @@
       "rotted:mob/hurt4"
     ],
     "subtitle": "subtitles.rotted.entity.rotted_zombie.hurt"
+  },
+
+  "entity.rotted_zombie.birth": {
+    "sounds": [
+      "rotted:mob/birth"
+    ],
+    "subtitle": "subtitles.rotted.entity.rotted_zombie.birth"
+  },
+
+  "entity.rotted_zombie.breaks_block": {
+    "sounds": [
+      "rotted:mob/break"
+    ],
+    "subtitle": "subtitles.rotted.entity.rotted_zombie.breaks_block"
   }
 
 

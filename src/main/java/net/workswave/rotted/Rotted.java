@@ -2,6 +2,9 @@ package net.workswave.rotted;
 
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
+import net.minecraft.client.renderer.entity.EntityRenderers;
+import net.minecraft.server.commands.GameRuleCommand;
+import net.minecraft.world.level.GameRules;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.world.BiomeModifier;
 import net.minecraftforge.event.server.ServerStartingEvent;
@@ -18,6 +21,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.workswave.biome.BiomeModification;
 import net.workswave.config.RottedConfig;
+import net.workswave.entity.client.*;
 import net.workswave.event.HandlerEvents;
 import net.workswave.registry.*;
 import org.slf4j.Logger;
@@ -31,6 +35,7 @@ public class Rotted {
 
     public Rotted() {
 
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, RottedConfig.DATAGEN_SPEC ,"rotteddata.toml");
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, RottedConfig.SERVER_SPEC ,"rottedconfig.toml");
         RottedConfig.loadConfig(RottedConfig.SERVER_SPEC,
                 FMLPaths.CONFIGDIR.get().resolve("rottedconfig.toml").toString());
@@ -66,7 +71,6 @@ public class Rotted {
 
 
 
-
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
@@ -77,11 +81,21 @@ public class Rotted {
     public static class ClientModEvents {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
+            EntityRenderers.register(EntityRegistry.ADVENTURER.get(), AdventurerRenderer::new);
+            EntityRenderers.register(EntityRegistry.FLUSK.get(), FluskRenderer::new);
+            EntityRenderers.register(EntityRegistry.MINER.get(), MinerRenderer::new);
+            EntityRenderers.register(EntityRegistry.FARMER.get(), FarmerRenderer::new);
+            EntityRenderers.register(EntityRegistry.DOCTOR.get(), DoctorRenderer::new);
+            EntityRenderers.register(EntityRegistry.MARINE.get(), MarineRenderer::new);
+            EntityRenderers.register(EntityRegistry.SHIELDER.get(), ShielderRenderer::new);
+
+
         }
     }
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event)
     {
+
 
     }
 }

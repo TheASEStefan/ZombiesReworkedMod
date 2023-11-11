@@ -48,11 +48,11 @@ public class MarineEntity extends RottedZombie implements GeoEntity, RottedWater
     public MarineEntity(EntityType<? extends Monster> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         this.xpReward = 10;
-        ;
         this.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
         this.waterNavigation = new WaterBoundPathNavigation(this, pLevel);
         this.groundNavigation = new GroundPathNavigation(this, pLevel);
     }
+
 
 
     @Override

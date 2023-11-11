@@ -25,6 +25,10 @@ public class SoundRegistry {
     public static final RegistryObject<SoundEvent> ENTITY_ROTTED_ZOMBIE_AMBIENT  = soundRegistry("entity.rotted_zombie.ambient");
     public static final RegistryObject<SoundEvent> ENTITY_ROTTED_ZOMBIE_HURT = soundRegistry("entity.rotted_zombie.hurt");
     public static final RegistryObject<SoundEvent> ENTITY_ROTTED_ZOMBIE_DEATH = soundRegistry("entity.rotted_zombie.death");
+    public static final RegistryObject<SoundEvent> ENTITY_ROTTED_ZOMBIE_BREAKS_BLOCK = soundRegistry("entity.rotted_zombie.breaks_block");
+    public static final RegistryObject<SoundEvent> ENTITY_PESTILITH_AMBIENT = soundRegistry("entity.pestilith.ambient");
+    public static final RegistryObject<SoundEvent> ENTITY_PESTILITH_DEATH = soundRegistry("entity.pestilith.death");
+    public static final RegistryObject<SoundEvent> ENTITY_PESTILITH_BIRTH = soundRegistry("entity.pestilith.birth");
 
 
 }

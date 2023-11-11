@@ -9,6 +9,8 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -69,7 +71,7 @@ public class AdventurerEntity extends RottedZombie implements GeoEntity, RottedW
         float a = (float) this.getAttributeValue(Attributes.ARMOR);
         float v = (float) this.getAttributeValue(Attributes.ARMOR_TOUGHNESS);
         f = f + EnchantmentHelper.getDamageBonus(this.getMainHandItem(), ((LivingEntity) entity).getMobType()) / 2;
-        if (entity instanceof RottedZombie) {
+        if (entity instanceof AdventurerEntity) {
             a = a + EnchantmentHelper.getDamageProtection(this.getArmorSlots(), ((LivingEntity) entity).getLastDamageSource());
             v = v + EnchantmentHelper.getDamageProtection(this.getArmorSlots(), ((LivingEntity) entity).getLastDamageSource());
         }
@@ -78,12 +80,7 @@ public class AdventurerEntity extends RottedZombie implements GeoEntity, RottedW
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(3, new CustomMeleeAttackGoal(this, 1.2, false) {
-            @Override
-            protected double getAttackReachSqr(LivingEntity entity) {
-                return 1.5 + entity.getBbWidth() * entity.getBbWidth();
-            }
-        });
+
         this.goalSelector.addGoal(0, new LeapAtTargetGoal(this,0.2F));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, IronGolem.class, true));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, true));
@@ -96,6 +93,12 @@ public class AdventurerEntity extends RottedZombie implements GeoEntity, RottedW
         this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.0D, false));
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(1, (new HurtByTargetGoal(this)).setAlertOthers(RottedZombie.class));
+        this.goalSelector.addGoal(4, new CustomMeleeAttackGoal(this, 1.5, false) {
+            @Override
+            protected double getAttackReachSqr(LivingEntity entity) {
+                return 1.5 + entity.getBbWidth() * entity.getBbWidth();
+            }
+        });
         this.goalSelector.addGoal(4, new OpenDoorGoal(this, true) {
             @Override
             public void start() {
@@ -119,6 +122,7 @@ public class AdventurerEntity extends RottedZombie implements GeoEntity, RottedW
     }
 
 
+
     @Nullable
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
         ((GroundPathNavigation)this.getNavigation()).setCanOpenDoors(true);
@@ -135,7 +139,6 @@ public class AdventurerEntity extends RottedZombie implements GeoEntity, RottedW
         ItemStack helmetG = ItemStack.EMPTY;
         ItemStack chestG = ItemStack.EMPTY;
         ItemStack mainG = ItemStack.EMPTY;
-        ItemStack offG = ItemStack.EMPTY;
 
         for (String str : RottedConfig.DATAGEN.adventurer_helmet.get()) {
             String[] string = str.split("\\|" );
@@ -158,25 +161,12 @@ public class AdventurerEntity extends RottedZombie implements GeoEntity, RottedW
                 mainG = main;
             }
         }
-        for (String str : RottedConfig.DATAGEN.adventurer_off_hand.get()){
-            String[] string = str.split("\\|" );
-            ItemStack off = new ItemStack(Objects.requireNonNull(ForgeRegistries.ITEMS.getValue(new ResourceLocation(string[0]))));
-            if (Math.random() < Integer.parseUnsignedInt(string[1]) / 100F) {
-                offG = off;
-            }
-        }
 
         this.setItemSlot(EquipmentSlot.MAINHAND, mainG);
-        this.setItemSlot(EquipmentSlot.OFFHAND, offG);
         this.setItemSlot(EquipmentSlot.HEAD, helmetG);
         this.setItemSlot(EquipmentSlot.CHEST, chestG);
 
     }
-    
-
-
-
-
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controller2) {
@@ -187,8 +177,8 @@ public class AdventurerEntity extends RottedZombie implements GeoEntity, RottedW
                         event.getController().setAnimationSpeed(1D);
                         return event.setAndContinue(RawAnimation.begin().thenLoop("aggression"));
                     }
-                    if(!event.isMoving()){
-                        event.setAndContinue(RawAnimation.begin().thenLoop("idle"));
+                    if(!event.isMoving()) {
+                        return event.setAndContinue(RawAnimation.begin().thenLoop("idle"));
                     }
                     return PlayState.CONTINUE;
                 }));
@@ -236,13 +226,13 @@ public class AdventurerEntity extends RottedZombie implements GeoEntity, RottedW
     protected void dropCustomDeathLoot(DamageSource pSource, int pLooting, boolean pRecentlyHit) {
         super.dropCustomDeathLoot(pSource, pLooting, pRecentlyHit);
         Entity entity = pSource.getEntity();
-        if(Math.random() <= 0.1F) {
+        if (Math.random() <= 0.1F) {
             this.spawnAtLocation(ItemRegistry.ROTTEN_BRAIN.get());
         }
-        if(Math.random() <= 0.6F) {
+        if (Math.random() <= 0.6F) {
             this.spawnAtLocation(Items.ROTTEN_FLESH);
         }
-        if(Math.random() <= 0.1F) {
+        if (Math.random() <= 0.1F) {
             this.spawnAtLocation(Items.ROTTEN_FLESH);
         }
 

@@ -19,7 +19,7 @@ modId="rotted" #mandatory
 # The version number of the mod - there's a few well known ${} variables useable here or just hardcode it
 # ${file.jarVersion} will substitute the value of the Implementation-Version as read from the mod's JAR file metadata
 # see the associated build.gradle script for how to populate this completely automatically during a build
-version="1.20.1-1.0.3" #mandatory
+version="1.20.1-1.0.5" #mandatory
 # A display name for the mod
 displayName="Rotted" #mandatory
 # A URL to query for updates for this mod. See the JSON update specification https://mcforge.readthedocs.io/en/latest/gettingstarted/autoupdate/
@@ -42,8 +42,9 @@ authors="ASEStefan" #optional
 
 # The description text for the mod (multi line!) (#mandatory)
 description='''
-Rotted is a minecraft mod that tends to add new zombie type creatures that look realistic with their animations,sounds and attacks!
-Rotted zombies have better ai than most zombies, making them weaker to fire, following and staying in group like realistic zombies, and they also will alert others if you hurt one of them and they are close to you.
+Rotted is a minecraft mod that adds new types of zombies, as well as revamping the already existing ones, making them drop custom loot and bonding them to have special AI. Rotted Zombies take more damage from fire than normal ones do.
+But, they are "pure" zombies, making them infect other creatures with the "contagion" effect with a 80% chance, whilst the normal zombies only have a 20% chance.
+When a player or villager dies with this effect, it's zombified counterpart will spawn. The counterpart of the player also gets some of his armor, his weapon and name. If you want to read the entire description go to the page of the mod.
 '''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.rotted]] #optional
@@ -65,7 +66,3 @@ mandatory=true
 versionRange="(1.20,1.20.1]"
 ordering="NONE"
 side="BOTH"
-[modproperties."${mod_id}"]
-catalogueImageIcon="${mod_id}_icon.png"
-catalogueBackground="${mod_id}_background.png"
-configuredBackground="minecraft:textures/block/stone.png"

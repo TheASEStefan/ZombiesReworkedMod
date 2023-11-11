@@ -1,6 +1,8 @@
 package net.workswave.extra;
 
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
+import net.minecraft.world.entity.ai.goal.LeapAtTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.monster.Drowned;
 import net.minecraft.world.entity.monster.Husk;
@@ -11,8 +13,9 @@ import net.minecraft.world.entity.npc.WanderingTrader;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.workswave.config.RottedConfig;
+import net.workswave.entity.ai.CustomMeleeAttackGoal;
 import net.workswave.entity.ai.FollowOthersGoal;
-import net.workswave.entity.ai.SearchAreaGoal;
 import net.workswave.entity.categories.RottedZombie;
 import net.workswave.rotted.Rotted;
 
@@ -21,7 +24,7 @@ public class AiRevamp {
     @SubscribeEvent()
     public static void addSpawn(EntityJoinLevelEvent event) {
         if (event.getEntity() instanceof Villager) {
-            Villager abstractVillager = (Villager) event.getEntity();abstractVillager.goalSelector.addGoal(2, new AvoidEntityGoal(abstractVillager, RottedZombie.class, 16.0F, 0.8F, 0.85F));
+            Villager abstractVillager = (Villager) event.getEntity();abstractVillager.goalSelector.addGoal(1, new AvoidEntityGoal(abstractVillager, RottedZombie.class, 16.0F, 0.8F, 0.85F));
         }
 
         if (event.getEntity() instanceof WanderingTrader) {
@@ -30,6 +33,11 @@ public class AiRevamp {
         }
 
         if (event.getEntity() instanceof Zombie || event.getEntity() instanceof Husk || event.getEntity() instanceof Drowned || event.getEntity() instanceof ZombieVillager) {
+
+
+
+
+
             Zombie zombie = (Zombie) event.getEntity();
             zombie.targetSelector.addGoal(1, (new HurtByTargetGoal(zombie)).setAlertOthers(RottedZombie.class));
             zombie.targetSelector.addGoal(1, (new HurtByTargetGoal(zombie)).setAlertOthers(Zombie.class));
@@ -41,6 +49,19 @@ public class AiRevamp {
             zombie.goalSelector.addGoal(10, new FollowOthersGoal(zombie, 0.7, ZombieVillager.class));
             zombie.goalSelector.addGoal(10, new FollowOthersGoal(zombie, 0.7, Drowned.class));
             zombie.goalSelector.addGoal(10, new FollowOthersGoal(zombie, 0.7, Husk.class));
+
+            if(RottedConfig.SERVER.vanilla_zombie_leaps.get()) {
+                zombie.goalSelector.addGoal(0, new LeapAtTargetGoal(zombie,0.2F));
+            }
+
+            if(RottedConfig.SERVER.vanilla_zombie_decreased_attack_range.get()) {
+                zombie.goalSelector.addGoal(4, new CustomMeleeAttackGoal(zombie, 1.5, false) {
+                    @Override
+                    protected double getAttackReachSqr(LivingEntity entity) {
+                        return 1.5 + entity.getBbWidth() * entity.getBbWidth();
+                    }
+                });
+            }
 
         }
     }

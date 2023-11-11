@@ -27,7 +27,6 @@ import javax.annotation.Nonnull;
 public class AdventurerRenderer extends DynamicGeoEntityRenderer<AdventurerEntity> {
     private static final String CHESTPLATE = "Down";
     private static final String HELMET = "Head";
-    private static final String OFF_HAND = "Arm2";
 
     AdventurerEntity golem;
     MultiBufferSource bufferIn;
@@ -42,7 +41,6 @@ public class AdventurerRenderer extends DynamicGeoEntityRenderer<AdventurerEntit
                 return switch (bone.getName()) {
                     case CHESTPLATE -> this.chestplateStack;
                     case HELMET -> this.helmetStack;
-                    case OFF_HAND -> this.offhandStack;
                     default -> null;
                 };
             }
@@ -53,7 +51,6 @@ public class AdventurerRenderer extends DynamicGeoEntityRenderer<AdventurerEntit
                 return switch (bone.getName()) {
                     case CHESTPLATE -> EquipmentSlot.CHEST;
                     case HELMET -> EquipmentSlot.HEAD;
-                    case OFF_HAND -> EquipmentSlot.OFFHAND;
                     default -> super.getEquipmentSlotForBone(bone, stack, animatable);
                 };
             }
@@ -63,7 +60,6 @@ public class AdventurerRenderer extends DynamicGeoEntityRenderer<AdventurerEntit
                 return switch (bone.getName()) {
                     case CHESTPLATE -> baseModel.body;
                     case HELMET -> baseModel.head;
-                    case OFF_HAND -> baseModel.leftArm;
                     default -> super.getModelPartForBone(bone, slot, stack, animatable, baseModel);
                 };
             }

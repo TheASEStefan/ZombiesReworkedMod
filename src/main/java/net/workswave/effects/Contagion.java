@@ -15,7 +15,7 @@ public class Contagion extends MobEffect {
 
 
     public Contagion() {
-        super(MobEffectCategory.HARMFUL, -13434778);
+        super(MobEffectCategory.HARMFUL, 0x063f07);
     }
 
     @Override

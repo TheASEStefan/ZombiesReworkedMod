@@ -17,11 +17,15 @@ public class CreativeTabRegistry {
 
     public static final RegistryObject<CreativeModeTab> ITEM = TABS.register("items", () -> CreativeModeTab.builder().title(Component.translatable("itemGroup." + Rotted.MODID + ".item")).icon(() -> new ItemStack(ItemRegistry.ROTTEN_BRAIN.get())).displayItems((enabledFeatures, entries) -> {
         entries.accept(ItemRegistry.MARINE_SPAWN_EGG.get());
-        entries.accept(ItemRegistry.FIREFIGHTER_SPAWN_EGG.get());
         entries.accept(ItemRegistry.DOCTOR_SPAWN_EGG.get());
         entries.accept(ItemRegistry.FARMER_SPAWN_EGG.get());
         entries.accept(ItemRegistry.MINER_SPAWN_EGG.get());
+        entries.accept(ItemRegistry.ADVENTURER_SPAWN_EGG.get());
+        entries.accept(ItemRegistry.FLUSK_SPAWN_EGG.get());
+        entries.accept(ItemRegistry.SHIELDER_SPAWN_EGG.get());
         entries.accept(ItemRegistry.ROTTEN_BRAIN.get());
+        entries.accept(ItemRegistry.FLUSK_VISCERA.get());
+        entries.accept(ItemRegistry.VISCERIC_KNIFE.get());
 
     }).build());
 

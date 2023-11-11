@@ -1,6 +1,11 @@
 package net.workswave.entity.categories;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
@@ -17,16 +22,22 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LeavesBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.Tags;
+import net.minecraftforge.event.level.NoteBlockEvent;
 import net.workswave.config.RottedConfig;
-import net.workswave.entity.ai.FloatDiveGoal;
-import net.workswave.entity.ai.FollowOthersGoal;
-import net.workswave.entity.ai.LocalTargettingGoal;
-import net.workswave.entity.ai.SearchAreaGoal;
+import net.workswave.entity.ai.*;
 import net.workswave.registry.EntityRegistry;
 import net.workswave.registry.RottedMobEffects;
+import net.workswave.registry.SoundRegistry;
 import org.jetbrains.annotations.Nullable;
+
 
 public class RottedZombie extends Monster {
     @Nullable
@@ -37,8 +48,6 @@ public class RottedZombie extends Monster {
         super(pEntityType, pLevel);
         this.setPathfindingMalus(BlockPathTypes.DANGER_FIRE, 16.0F);
         this.setPathfindingMalus(BlockPathTypes.DAMAGE_FIRE, -1.0F);
-        this.setPathfindingMalus(BlockPathTypes.DANGER_POWDER_SNOW, 16.0F);
-        this.setPathfindingMalus(BlockPathTypes.DANGER_POWDER_SNOW, -1.0F);
         this.xpReward = 5;
         EntityRegistry.ZOMBIE_ENTITIES.add(this);
     }
@@ -77,6 +86,8 @@ public class RottedZombie extends Monster {
         this.goalSelector.addGoal(10, new FloatDiveGoal(this));
         this.goalSelector.addGoal(4, new SearchAreaGoal(this, 1.2));
         this.goalSelector.addGoal(3, new LocalTargettingGoal(this));
+
+
     }
 
     @Nullable
@@ -102,11 +113,34 @@ public class RottedZombie extends Monster {
         }
 
     }
+    public void aiStep() {
+        super.aiStep();
+        Entity attackTarget = this.getTarget();
+        if (this.isAlive() && attackTarget != null && this.hasLineOfSight(attackTarget) && this.distanceTo(attackTarget) <= 10F && RottedConfig.SERVER.doMobsBreakBlocks.get()) {
+
+            if (this.horizontalCollision && net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level(), this)) {
+                boolean flag = false;
+                AABB aabb = this.getBoundingBox().inflate(0.2D);
+
+                for(BlockPos blockpos : BlockPos.betweenClosed(Mth.floor(aabb.minX), Mth.floor(aabb.minY), Mth.floor(aabb.minZ), Mth.floor(aabb.maxX), Mth.floor(aabb.maxY), Mth.floor(aabb.maxZ))) {
+                    BlockState blockstate = this.level().getBlockState(blockpos);
+                    Block block = blockstate.getBlock();
+                    if (this.getRandom().nextInt(30) == 0 && (!block.equals(Tags.Blocks.OBSIDIAN) || !block.equals(Tags.Blocks.ORES))) {
+                        this.level().playSound((Player)null, this.blockPosition(), SoundRegistry.ENTITY_ROTTED_ZOMBIE_BREAKS_BLOCK.get(), SoundSource.HOSTILE, 1.0F, 1.0F);
+                        flag = this.level().destroyBlock(blockpos, true, this) || flag;
+                    }
+
+                }
+
+            }
+
+
+        }
+    }
 
     public int getMaxAirSupply() {
         return 1200;
     }
-
     protected int increaseAirSupply(int p_28389_) {
         return this.getMaxAirSupply();
     }
@@ -120,8 +154,8 @@ public class RottedZombie extends Monster {
                 float f = (float) this.getAttributeValue(Attributes.ATTACK_DAMAGE);
                 f = f + EnchantmentHelper.getDamageBonus(this.getMainHandItem(), ((LivingEntity) entity).getMobType()) / 2;
                 if(Math.random() <= RottedConfig.SERVER.rotted_zombie_contagion_hit_chance.get()) {
-                  if (entity instanceof LivingEntity livingEntity) {
-                    livingEntity.addEffect(new MobEffectInstance(RottedMobEffects.CONTAGION.get(), 600, 0), this);
+                  if (entity instanceof LivingEntity living) {
+                    living.addEffect(new MobEffectInstance(RottedMobEffects.CONTAGION.get(), 600, 0), this);
                 }
             }
         }

@@ -30,11 +30,6 @@ public class EntityRegistry {
                     () -> EntityType.Builder.of(MarineEntity::new, ZOMBIE)
                             .sized(0.8f, 1.8f)
                             .build(new ResourceLocation(Rotted.MODID, "marine").toString()));
-    public static final RegistryObject<EntityType<FirefighterEntity>> FIREFIGHTER =
-            ENTITY_TYPES.register("firefighter",
-                    () -> EntityType.Builder.of(FirefighterEntity::new, ZOMBIE)
-                            .sized(0.8f, 1.8f)
-                            .build(new ResourceLocation(Rotted.MODID, "firefighter").toString()));
     public static final RegistryObject<EntityType<DoctorEntity>> DOCTOR =
             ENTITY_TYPES.register("doctor",
                     () -> EntityType.Builder.of(DoctorEntity::new, ZOMBIE)
@@ -51,8 +46,21 @@ public class EntityRegistry {
                     () -> EntityType.Builder.of(MinerEntity::new, ZOMBIE)
                             .sized(0.8f, 1.8f)
                             .build(new ResourceLocation(Rotted.MODID, "miner").toString()));
-
-
+    public static final RegistryObject<EntityType<AdventurerEntity>> ADVENTURER =
+            ENTITY_TYPES.register("adventurer",
+                    () -> EntityType.Builder.of(AdventurerEntity::new, ZOMBIE)
+                            .sized(0.8f, 1.8f)
+                            .build(new ResourceLocation(Rotted.MODID, "adventurer").toString()));
+    public static final RegistryObject<EntityType<FluskEntity>> FLUSK =
+            ENTITY_TYPES.register("flusk",
+                    () -> EntityType.Builder.of(FluskEntity::new, ZOMBIE)
+                            .sized(0.9f, 2.2f)
+                            .build(new ResourceLocation(Rotted.MODID, "flusk").toString()));
+    public static final RegistryObject<EntityType<ShielderEntity>> SHIELDER =
+            ENTITY_TYPES.register("shielder",
+                    () -> EntityType.Builder.of(ShielderEntity::new, ZOMBIE)
+                            .sized(0.8f, 1.8f)
+                            .build(new ResourceLocation(Rotted.MODID, "shielder").toString()));
 
     public static void register(IEventBus eventBus) {
         ENTITY_TYPES.register(eventBus);

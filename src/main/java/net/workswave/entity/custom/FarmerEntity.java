@@ -4,7 +4,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
@@ -26,15 +25,12 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.workswave.config.RottedConfig;
 import net.workswave.entity.ai.CustomMeleeAttackGoal;
-import net.workswave.entity.ai.LeapGoal;
 import net.workswave.entity.categories.RottedZombie;
 import net.workswave.registry.ItemRegistry;
 import net.workswave.registry.SoundRegistry;
-import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -44,9 +40,6 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
-import java.time.LocalDate;
-import java.time.temporal.ChronoField;
-import java.util.EnumSet;
 import java.util.function.Predicate;
 
 public class FarmerEntity extends RottedZombie implements GeoEntity {
@@ -97,7 +90,9 @@ public class FarmerEntity extends RottedZombie implements GeoEntity {
         this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.0D, false));
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(1, (new HurtByTargetGoal(this)).setAlertOthers(RottedZombie.class));
+
     }
+
 
     @Nullable
     public static AttributeSupplier.Builder createAttributes() {
@@ -205,7 +200,7 @@ public class FarmerEntity extends RottedZombie implements GeoEntity {
                         return event.setAndContinue(RawAnimation.begin().thenLoop("aggression"));
                     }
                     if(!event.isMoving()){
-                        event.setAndContinue(RawAnimation.begin().thenLoop("idle"));
+                        return event.setAndContinue(RawAnimation.begin().thenLoop("idle"));
                     }
                     return PlayState.CONTINUE;
                 }));

@@ -7,9 +7,9 @@ import net.workswave.entity.custom.MarineEntity;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class MarineRenderer extends GeoEntityRenderer<MarineEntity> {
-    public MarineRenderer(EntityRendererProvider.Context renderManagerIn) {
+     public MarineRenderer(EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new MarineModel());
-        shadowRadius = 0.8f;
+        shadowRadius = 0.5f;
     }
 
 

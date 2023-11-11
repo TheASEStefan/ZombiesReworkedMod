@@ -14,13 +14,11 @@ public class ClientModEventSubscriber {
     public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers event) {
 
         event.registerEntityRenderer(EntityRegistry.MARINE.get(), MarineRenderer::new);
-        event.registerEntityRenderer(EntityRegistry.FIREFIGHTER.get(), FirefighterRenderer::new);
         event.registerEntityRenderer(EntityRegistry.DOCTOR.get(), DoctorRenderer::new);
         event.registerEntityRenderer(EntityRegistry.FARMER.get(), FarmerRenderer::new);
         event.registerEntityRenderer(EntityRegistry.MINER.get(), MinerRenderer::new);
-
-
-
+        event.registerEntityRenderer(EntityRegistry.FLUSK.get(), FluskRenderer::new);
+        event.registerEntityRenderer(EntityRegistry.SHIELDER.get(), ShielderRenderer::new);
 
     }
 
