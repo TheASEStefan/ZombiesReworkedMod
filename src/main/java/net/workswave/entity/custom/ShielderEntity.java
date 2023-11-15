@@ -3,6 +3,7 @@ package net.workswave.entity.custom;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
@@ -41,7 +42,6 @@ public class ShielderEntity extends RottedZombie implements GeoEntity {
 
     public int chargetime = 0;
     private boolean charge = false;
-    private boolean sure = false;
 
 
 
@@ -136,10 +136,10 @@ public class ShielderEntity extends RottedZombie implements GeoEntity {
     @Override
     public boolean hurt(DamageSource pSource, float pAmount) {
 
-        this.sure = false;
         if (pSource.is(DamageTypes.MOB_ATTACK) && Math.random() <= 0.3F) {
 
-                this.sure = true;
+            this.level().playSound((Player)null, this.blockPosition(), SoundEvents.SHIELD_BLOCK, SoundSource.HOSTILE, 1.0F, 0.5F);
+
                 return super.hurt(pSource, pAmount / 3);
         }
 
@@ -149,12 +149,11 @@ public class ShielderEntity extends RottedZombie implements GeoEntity {
 
     @Override
     public boolean doHurtTarget(Entity entity) {
-        double d0 = entity.getX() - this.getX();
-        double d1 = entity.getZ() - this.getZ();
-        double d2 = Math.max(d0 * d0 + d1 * d1, 0.001D);
+
         if (this.charge && this.chargetime > 0) {
 
-            entity.push(d0 / d2 * 3.5D, 0.3D, d1 / d2 * 3.0D);
+            entity.moveTo(entity.getX() * 1.6F + (entity.getX() - this.getX() / 2) , entity.getY() * 1.3F + Math.PI / 4, entity.getZ());
+
         }
         return super.doHurtTarget(entity);
     }
@@ -177,9 +176,6 @@ public class ShielderEntity extends RottedZombie implements GeoEntity {
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-        if (this.sure) {
-            return SoundEvents.SHIELD_BLOCK;
-        }
         return SoundRegistry.ENTITY_ROTTED_ZOMBIE_HURT.get();
     }
 

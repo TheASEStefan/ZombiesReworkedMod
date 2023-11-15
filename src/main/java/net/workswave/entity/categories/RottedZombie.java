@@ -38,6 +38,9 @@ import net.workswave.registry.RottedMobEffects;
 import net.workswave.registry.SoundRegistry;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class RottedZombie extends Monster {
     @Nullable
@@ -120,14 +123,14 @@ public class RottedZombie extends Monster {
 
             if (this.horizontalCollision && net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level(), this)) {
                 boolean flag = false;
-                AABB aabb = this.getBoundingBox().inflate(0.2D);
+                AABB aabb = this.getBoundingBox().inflate(RottedConfig.SERVER.block_breaking_action_sphere.get());
 
                 for(BlockPos blockpos : BlockPos.betweenClosed(Mth.floor(aabb.minX), Mth.floor(aabb.minY), Mth.floor(aabb.minZ), Mth.floor(aabb.maxX), Mth.floor(aabb.maxY), Mth.floor(aabb.maxZ))) {
                     BlockState blockstate = this.level().getBlockState(blockpos);
                     Block block = blockstate.getBlock();
-                    if (this.getRandom().nextInt(30) == 0 && (!block.equals(Tags.Blocks.OBSIDIAN) || !block.equals(Tags.Blocks.ORES))) {
+                    if (this.getRandom().nextInt(RottedConfig.SERVER.block_breaking_chance.get()) == 0 && blockstate.getDestroySpeed(level(), blockpos) < getDestroySpeed() && blockstate.getDestroySpeed(level(), blockpos) >= 0)  {
                         this.level().playSound((Player)null, this.blockPosition(), SoundRegistry.ENTITY_ROTTED_ZOMBIE_BREAKS_BLOCK.get(), SoundSource.HOSTILE, 1.0F, 1.0F);
-                        flag = this.level().destroyBlock(blockpos, true, this) || flag;
+                        flag = this.level().destroyBlock(blockpos, false, this) || flag;
                     }
 
                 }
@@ -136,6 +139,9 @@ public class RottedZombie extends Monster {
 
 
         }
+    }
+    public int getDestroySpeed(){
+        return 5;
     }
 
     public int getMaxAirSupply() {

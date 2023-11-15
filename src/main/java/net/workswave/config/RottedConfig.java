@@ -66,10 +66,12 @@ public class RottedConfig {
         public final ForgeConfigSpec.ConfigValue<Boolean> vanilla_zombie__contagion_effect;
         public final ForgeConfigSpec.ConfigValue<Double> vanilla_zombie_contagion_hit_chance;
         public final ForgeConfigSpec.ConfigValue<Boolean> vanilla_zombie_leaps;
-        public final ForgeConfigSpec.ConfigValue<Boolean> doMobsBreakBlocks;
         public final ForgeConfigSpec.ConfigValue<Boolean> vanilla_zombie_decreased_attack_range;
         public final ForgeConfigSpec.ConfigValue<Boolean> adventurer_assimilation;
         public final ForgeConfigSpec.ConfigValue<Boolean> villager_assimilation;
+        public final ForgeConfigSpec.ConfigValue<Integer> block_breaking_chance;
+        public final ForgeConfigSpec.ConfigValue<Double> block_breaking_action_sphere;
+        public final ForgeConfigSpec.ConfigValue<Boolean> doMobsBreakBlocks;
 
 
         public Server(ForgeConfigSpec.Builder builder) {
@@ -137,9 +139,12 @@ public class RottedConfig {
             this.adventurer_assimilation = builder.comment("Default true").define("Should the player convert after dying with the contagion effect?",true);
             this.villager_assimilation = builder.comment("Default true").define("Should the villager convert after dying with the contagion effect?",true);
             builder.pop();
-            builder.push("AI Options");
+            builder.push("AI Options + Block Breaking Options");
             this.doMobsBreakBlocks = builder.comment("Default true").define("Should the rotted zombies break blocks?",true);
+            this.block_breaking_chance = builder.comment("Default 90").defineInRange("Chance of the block breaking on tick, 90 ~= 1.5%", 90, 60, 200);
+            this.block_breaking_action_sphere = builder.comment("Default 0.15").defineInRange("Area of the blocks that the mob can break, the bigger the number, the more the blocks a mob can destroy in one go", 0.15, 0.05, 0.5);
             builder.pop();
+
 
         }
     }
