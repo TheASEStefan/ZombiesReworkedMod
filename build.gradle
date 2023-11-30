@@ -8,9 +8,9 @@ plugins {
 }
 
 
-version = '1.20.1-1.0.6'
-group = 'net.workswave.rotted' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = 'rotted'
+version = '1.20.1-1.0.1'
+group = 'net.teamabyssal.zombies_reworked' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = 'zombies_reworked'
 
 // Mojang ships Java 17 to end users in 1.18+, so your mod should target Java 17.
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
@@ -55,10 +55,10 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
-            property 'forge.enabledGameTestNamespaces', 'rotted'
+            property 'forge.enabledGameTestNamespaces', 'zombies_reworked'
 
             mods {
-                rotted {
+                zombies_reworked {
                     source sourceSets.main
                 }
             }
@@ -75,7 +75,7 @@ minecraft {
 
             property 'forge.logging.console.level', 'debug'
 
-            property 'forge.enabledGameTestNamespaces', 'rotted'
+            property 'forge.enabledGameTestNamespaces', 'zombies_reworked'
 
 
 
@@ -83,7 +83,7 @@ minecraft {
 
 
             mods {
-                rotted {
+                zombies_reworked {
                     source sourceSets.main
                 }
             }
@@ -99,10 +99,10 @@ minecraft {
 
             property 'forge.logging.console.level', 'debug'
 
-            property 'forge.enabledGameTestNamespaces', 'rotted'
+            property 'forge.enabledGameTestNamespaces', 'zombies_reworked'
 
             mods {
-                rotted {
+                zombies_reworked {
                     source sourceSets.main
                 }
             }
@@ -116,10 +116,10 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
-            args '--mod', 'rotted', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+            args '--mod', 'zombies_reworked', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
 
             mods {
-                rotted {
+                zombies_reworked {
                     source sourceSets.main
                 }
             }
@@ -134,7 +134,7 @@ repositories {
 
     // Put repositories for dependencies here
     // ForgeGradle automatically adds the Forge maven and Maven Central for you
-    maven { url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
+
     maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
     mavenCentral()
     // If you have mod jar dependencies in ./libs, you can declare them as a repository like so.
@@ -146,7 +146,7 @@ repositories {
 
 dependencies {
 
-    minecraft 'net.minecraftforge:forge:1.20.1-47.2.4'
+    minecraft 'net.minecraftforge:forge:1.20.1-47.2.16'
     // Specify the version of Minecraft to use.
     // Any artifact can be supplied so long as it has a "userdev" classifier artifact and is a compatible patcher artifact.
     // The "userdev" classifier will be requested and setup by ForgeGradle.
@@ -163,7 +163,6 @@ dependencies {
     // This maps to ./libs/coolmod-${mc_version}-${coolmod_version}.jar
     // The group id is ignored when searching -- in this case, it is "blank"
     // implementation fg.deobf("blank:coolmod-${mc_version}:${coolmod_version}")
-    implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.20.1:4.2.4')
 
     // For more info:
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html

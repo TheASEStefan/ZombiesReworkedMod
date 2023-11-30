@@ -15,13 +15,13 @@ license="MIT License"
 # A list of mods - how many allowed here is determined by the individual mod loader
 [[mods]] #mandatory
 # The modid of the mod
-modId="rotted" #mandatory
+modId="zombies_reworked" #mandatory
 # The version number of the mod - there's a few well known ${} variables useable here or just hardcode it
 # ${file.jarVersion} will substitute the value of the Implementation-Version as read from the mod's JAR file metadata
 # see the associated build.gradle script for how to populate this completely automatically during a build
-version="1.20.1-1.0.6" #mandatory
+version="1.20.1-1.0.1" #mandatory
 # A display name for the mod
-displayName="Rotted" #mandatory
+displayName="Zombies Reworked" #mandatory
 # A URL to query for updates for this mod. See the JSON update specification https://mcforge.readthedocs.io/en/latest/gettingstarted/autoupdate/
 #updateJSONURL="https://change.me.example.invalid/updates.json" #optional
 # A URL for the "homepage" for this mod, displayed in the mod UI
@@ -29,7 +29,7 @@ displayName="Rotted" #mandatory
 # A file name (in the root of the mod JAR) containing a logo for display
 logoFile="logo.png" #optional
 # A text field displayed in the mod UI
-credits="To my community and those nice github repositories" #optional
+credits="To everyone who loves zombies" #optional
 # A text field displayed in the mod UI
 authors="ASEStefan" #optional
 # Display Test controls the display for your mod in the server connection screen
@@ -42,12 +42,11 @@ authors="ASEStefan" #optional
 
 # The description text for the mod (multi line!) (#mandatory)
 description='''
-Rotted is a minecraft mod that adds new types of zombies, as well as revamping the already existing ones, making them drop custom loot and bonding them to have special AI. Rotted Zombies take more damage from fire than normal ones do.
-But, they are "pure" zombies, making them infect other creatures with the "contagion" effect with a 80% chance, whilst the normal zombies only have a 20% chance.
-When a player or villager dies with this effect, it's zombified counterpart will spawn. The counterpart of the player also gets some of his armor, his weapon and name. If you want to read the entire description go to the page of the mod.
+Zombies Reworked is a mod that overhauls and changes the zombies in a better way!
+Ranging from small features to better AI system and better mechanics to make the mod a must need for apocalyptic minecraft modpacks.
 '''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
-[[dependencies.rotted]] #optional
+[[dependencies.zombies_reworked]] #optional
 # the modid of the dependency
 modId="forge" #mandatory
 # Does this dependency have to exist - if not, ordering below must be specified
@@ -59,7 +58,7 @@ ordering="NONE"
 # Side this dependency is applied on - BOTH, CLIENT or SERVER
 side="BOTH"
 # Here's another dependency
-[[dependencies.rotted]]
+[[dependencies.zombies_reworked]]
 modId="minecraft"
 mandatory=true
 # This version range declares a minimum of the current minecraft version up to but not including the next major version
