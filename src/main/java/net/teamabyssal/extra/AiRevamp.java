@@ -1,11 +1,11 @@
 package net.teamabyssal.extra;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -18,9 +18,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.ItemFishedEvent;
@@ -47,17 +44,49 @@ public class AiRevamp {
             ItemStack itemStack = zombie.getOffhandItem();
             Item item = itemStack.getItem();
             Item shield = Items.SHIELD;
+            Item totem = Items.TOTEM_OF_UNDYING;
+            Item pearl = Items.ENDER_PEARL;
+            int cnt = 0;
+            int sub = 0;
             if (zombie.isAlive() && target != null) {
-                if (item == shield && Math.random() <= 0.3F) {
+                if (item == shield && Math.random() <= 0.3F && ZombiesReworkedConfig.SERVER.shield_use.get()) {
                     zombie.level().playSound((Player)null, zombie.blockPosition(), SoundEvents.SHIELD_BLOCK, SoundSource.HOSTILE, 1.0F, 1.0F);
-                     if(!(target instanceof Player player)) {
+                     if (!(target instanceof Player player)) {
                          zombie.setHealth(zombie.getHealth() + 1.5F * (float) Math.PI / 4 - (float) Math.atan2(60, 120));
                          zombie.swing(InteractionHand.OFF_HAND);
                      }
                      else {
                          zombie.setHealth(zombie.getHealth() + (float) player.getMainHandItem().getDamageValue() / 3);
+                         zombie.swing(InteractionHand.OFF_HAND);
                      }
                 }
+
+                else if (item == totem && Math.random() <= 0.5F && event != null && (zombie.getHealth() <= 4 || zombie.isDeadOrDying()) && ZombiesReworkedConfig.SERVER.totem_use.get()) {
+                    ++cnt;
+                    if (cnt == 1) {
+
+                        zombie.level().playSound((Player)null, zombie.blockPosition(), SoundEvents.TOTEM_USE, SoundSource.HOSTILE, 1.0F, 1.0F);
+                        zombie.setHealth(zombie.getHealth() + zombie.getMaxHealth() / 3);
+                        zombie.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 100, 1), zombie);
+                        zombie.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 900, 1), zombie);
+                        zombie.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 800, 0), zombie);
+                        zombie.getOffhandItem().setCount(0);
+                        zombie.swing(InteractionHand.OFF_HAND);
+                        zombie.swing(InteractionHand.MAIN_HAND);
+
+
+
+                    }
+                }
+                else if (item == pearl && Math.random() <= 0.2F && event != null && ZombiesReworkedConfig.SERVER.pearl_use.get()) {
+                    ++sub;
+                    if (sub == 1) {
+                        zombie.level().playSound((Player)null, zombie.blockPosition(), SoundEvents.ENDERMAN_TELEPORT, SoundSource.HOSTILE, 1.0F, 1.0F);
+                        zombie.teleportTo(zombie.getX() + zombie.getRandom().nextInt(2), zombie.getY(), zombie.getZ() + zombie.getRandom().nextInt(5));
+                        zombie.getOffhandItem().setCount(0);
+                    }
+                }
+
             }
 
         }
@@ -69,7 +98,7 @@ public class AiRevamp {
                 Item item = itemStack.getItem();
                 Item fire = Items.FLINT_AND_STEEL;
                 if (entity.isAlive() && attacker.isAlive()) {
-                    if (item == fire && Math.random() <= 0.3F) {
+                    if (item == fire && Math.random() <= 0.3F && ZombiesReworkedConfig.SERVER.flint_and_steel_use.get()) {
                         entity.level().playSound((Player) null, entity.blockPosition(), SoundEvents.FLINTANDSTEEL_USE, SoundSource.HOSTILE, 1.0F, 1.0F);
                         entity.setSecondsOnFire(5);
                         attacker.swing(InteractionHand.OFF_HAND);
@@ -90,14 +119,6 @@ public class AiRevamp {
             }
         }
     }
-
-
-
-    public static int getDestroySpeed() {
-        return 5;
-    }
-
-
 
 
     @SubscribeEvent()
@@ -151,40 +172,21 @@ public class AiRevamp {
              * /// Block Breaking
              */
 
-            ItemStack itemStack = zombie.getMainHandItem();
-            Item item = itemStack.getItem();
-            Item pickaxe = Items.IRON_PICKAXE;
-            if (item == pickaxe) {
 
 
-                Entity attackTarget = zombie.getTarget();
-                if (zombie.isAlive() && attackTarget != null && zombie.hasLineOfSight(attackTarget) && zombie.distanceTo(attackTarget) <= 10F && ZombiesReworkedConfig.SERVER.zombies_break_blocks.get()) {
+            ItemStack varstack = zombie.getOffhandItem();
+            Item item = varstack.getItem();
+            Item spyglass = Items.SPYGLASS;
 
-                    if (zombie.horizontalCollision && net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(zombie.level(), zombie)) {
-                        boolean flag = false;
-                        AABB aabb = zombie.getBoundingBox().inflate(ZombiesReworkedConfig.SERVER.block_breaking_action_sphere.get());
-
-                        for (BlockPos blockpos : BlockPos.betweenClosed(Mth.floor(aabb.minX), Mth.floor(aabb.minY), Mth.floor(aabb.minZ), Mth.floor(aabb.maxX), Mth.floor(aabb.maxY), Mth.floor(aabb.maxZ))) {
-                            BlockState blockstate = zombie.level().getBlockState(blockpos);
-                            Block block = blockstate.getBlock();
-                            if (zombie.getRandom().nextInt(ZombiesReworkedConfig.SERVER.block_breaking_chance.get()) == 0 && blockstate.getDestroySpeed(zombie.level(), blockpos) < getDestroySpeed() && blockstate.getDestroySpeed(zombie.level(), blockpos) >= 0) {
-                                zombie.level().playSound((Player) null, zombie.blockPosition(), SoundEvents.ZOMBIE_HORSE_AMBIENT, SoundSource.HOSTILE, 1.0F, 0.6F);
-                                flag = zombie.level().destroyBlock(blockpos, false, zombie) || flag;
-                            }
-
-
+                if (item == spyglass && ZombiesReworkedConfig.SERVER.spyglass_use.get()) {
+                    zombie.getAttribute(Attributes.FOLLOW_RANGE).setBaseValue(zombie.getAttributeBaseValue(Attributes.FOLLOW_RANGE) + 64);
+                    if (zombie.getTarget() != null) {
+                        zombie.getLookControl().setLookAt(zombie.getTarget());
+                        if (zombie.distanceTo(zombie.getTarget()) > 32F && zombie.getRandom().nextInt(20) == 0) {
+                            zombie.level().playSound((Player)null, zombie.blockPosition(), SoundEvents.SPYGLASS_USE, SoundSource.HOSTILE, 1.0F, 1.0F);
                         }
-
-
                     }
-
-
                 }
-            }
-
-
-
-
 
 
 

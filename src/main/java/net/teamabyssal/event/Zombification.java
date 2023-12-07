@@ -18,10 +18,13 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.teamabyssal.config.ZombiesReworkedConfig;
 
-import java.util.Objects;
 
 @Mod.EventBusSubscriber
 public class Zombification {
+
+
+
+
     @SubscribeEvent
     public static void onEntityDeath(LivingDeathEvent event) {
         if (event != null && event.getEntity() != null && !event.getEntity().level().isClientSide) {
@@ -31,7 +34,7 @@ public class Zombification {
             double z = event.getEntity().getZ();
             Entity entity = event.getEntity();
 
-            if (entity instanceof Player player && !world.isClientSide && (ZombiesReworkedConfig.SERVER.player_assimilation.get()) && Math.random() <= ZombiesReworkedConfig.SERVER.assimilation_chance.get() && Objects.requireNonNull(((Player) entity).getLastDamageSource()).getEntity() instanceof Zombie) {
+            if (entity instanceof Player player && !world.isClientSide && (ZombiesReworkedConfig.SERVER.player_assimilation.get()) && Math.random() <= ZombiesReworkedConfig.SERVER.assimilation_chance.get() && player.getLastDamageSource() != null && player.getLastDamageSource().getEntity() instanceof Zombie) {
                 Component name = player.getName();
                 Zombie zombie = EntityType.ZOMBIE.create(world);
                 ItemStack head = player.getItemBySlot(EquipmentSlot.HEAD);
@@ -57,11 +60,13 @@ public class Zombification {
                 zombie.setDropChance(EquipmentSlot.LEGS, 0);
                 world.addFreshEntity(zombie);
                 zombie.playSound(SoundEvents.ZOMBIE_INFECT);
+
+
                 if (player.level() instanceof ServerLevel server) {
                     server.sendParticles(ParticleTypes.EXPLOSION, player.getX(), player.getY() + 1, player.getZ(), 4, 0.4, 1.0, 0.4, 0);
                 }
             }
-            else if (entity instanceof Villager villager && !world.isClientSide && Math.random() <= ZombiesReworkedConfig.SERVER.assimilation_chance.get() && Objects.requireNonNull(((Villager) entity).getLastDamageSource()).getEntity() instanceof Zombie) {
+            else if (entity instanceof Villager villager && !world.isClientSide && Math.random() <= ZombiesReworkedConfig.SERVER.assimilation_chance.get() && villager.getLastDamageSource() != null && villager.getLastDamageSource().getEntity() instanceof Zombie) {
                 ZombieVillager zombieVillager = EntityType.ZOMBIE_VILLAGER.create(world);
                 assert zombieVillager != null;
                 zombieVillager.moveTo(event.getEntity().getX(), event.getEntity().getY(), event.getEntity().getZ());

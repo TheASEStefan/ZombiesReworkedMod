@@ -42,10 +42,11 @@ public class ZombiesReworkedConfig {
         public final ForgeConfigSpec.ConfigValue<Boolean> heavy_armor_on_zombies;
         public final ForgeConfigSpec.ConfigValue<Boolean> sprint_goal;
         public final ForgeConfigSpec.ConfigValue<Boolean> fast_at_night;
-        public final ForgeConfigSpec.ConfigValue<Boolean> zombies_break_blocks;
-
-        public final ForgeConfigSpec.ConfigValue<Integer> block_breaking_chance;
-        public final ForgeConfigSpec.ConfigValue<Double> block_breaking_action_sphere;
+        public final ForgeConfigSpec.ConfigValue<Boolean> spyglass_use;
+        public final ForgeConfigSpec.ConfigValue<Boolean> pearl_use;
+        public final ForgeConfigSpec.ConfigValue<Boolean> shield_use;
+        public final ForgeConfigSpec.ConfigValue<Boolean> totem_use;
+        public final ForgeConfigSpec.ConfigValue<Boolean> flint_and_steel_use;
 
         public Server(ForgeConfigSpec.Builder builder) {
 
@@ -55,9 +56,14 @@ public class ZombiesReworkedConfig {
             this.heavy_armor_on_zombies = builder.comment("Default true").define("Should zombies have upgraded armor and equipment and spawn with it less rarely?",true);
             this.sprint_goal = builder.comment("Default true").define("Should zombies perform small sprints when close to the player?",true);
             this.fast_at_night = builder.comment("Default true").define("Should zombies be faster when encountering the player at night time?",true);
-            this.zombies_break_blocks = builder.comment("Default true").define("Should zombies break blocks?",true);
-            this.block_breaking_chance = builder.comment("Default 150").defineInRange("Chance of the block breaking on tick, 150 ~= 1%, the bigger the number, the smaller the chance on tick", 150, 60, 200);
-            this.block_breaking_action_sphere = builder.comment("Default 0.15").defineInRange("Area of the blocks that the mob can break, the bigger the number, the more the blocks a mob can destroy in one go", 0.15, 0.05, 0.5);
+            builder.pop();
+
+            builder.push("Items that the zombies can use");
+            this.spyglass_use = builder.comment("Default true").define("Should the zombies use spyglasses?",true);
+            this.pearl_use = builder.comment("Default true").define("Should the zombies use ender pearls?",true);
+            this.shield_use = builder.comment("Default true").define("Should the zombies use shields?",true);
+            this.totem_use = builder.comment("Default true").define("Should the zombies use totems of undying?",true);
+            this.flint_and_steel_use = builder.comment("Default true").define("Should the zombies use flint and steels?",true);
             builder.pop();
 
             builder.push("Zombifications");
@@ -86,13 +92,13 @@ public class ZombiesReworkedConfig {
             this.zombie_chestplate = builder.defineList("Chest Slot",
                     Lists.newArrayList("minecraft:chainmail_chestplate|50","minecraft:iron_chestplate|20","minecraft:leather_chestplate|20") , o -> o instanceof String);
             this.zombie_main_hand = builder.defineList("Main Hand Slot",
-                    Lists.newArrayList("minecraft:stone_sword|50" , "minecraft:iron_sword|20","minecraft:stone_axe|25", "minecraft:iron_axe|20" , "minecraft:golden_sword|30", "minecraft:iron_pickaxe|20") , o -> o instanceof String);
+                    Lists.newArrayList("minecraft:stone_sword|50" , "minecraft:iron_sword|20","minecraft:stone_axe|25", "minecraft:iron_axe|20" , "minecraft:golden_sword|30") , o -> o instanceof String);
             this.zombie_legs = builder.defineList("Legs Slot",
                     Lists.newArrayList("minecraft:leather_leggings|50","minecraft:iron_leggings|20","minecraft:chainmail_leggings|20") , o -> o instanceof String);
             this.zombie_feet = builder.defineList("Boots Slot",
                     Lists.newArrayList("minecraft:leather_boots|50","minecraft:iron_boots|20","minecraft:chainmail_boots|20") , o -> o instanceof String);
             this.zombie_off_hand = builder.defineList("Off Hand Slot",
-                    Lists.newArrayList("minecraft:torch|50","minecraft:shield|30","minecraft:flint_and_steel|30") , o -> o instanceof String);
+                    Lists.newArrayList( "minecraft:ender_pearl|15", "minecraft:totem_of_undying|10", "minecraft:spyglass|20", "minecraft:shield|30", "minecraft:flint_and_steel|30") , o -> o instanceof String);
             builder.pop();
         }
 
