@@ -3,6 +3,7 @@ package net.teamabyssal.extra;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -19,6 +20,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.ItemFishedEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -38,7 +40,7 @@ public class AiRevamp {
 
     @SubscribeEvent()
     public static void onZombieHurt(LivingHurtEvent event) {
-        if (event.getEntity() instanceof Zombie || event.getEntity() instanceof Husk || event.getEntity() instanceof Drowned || event.getEntity() instanceof ZombieVillager) {
+        if ((event.getEntity() instanceof Zombie || event.getEntity() instanceof Husk || event.getEntity() instanceof Drowned) && !(event.getEntity() instanceof ZombieVillager || event.getEntity() instanceof ZombifiedPiglin)) {
             Zombie zombie = (Zombie) event.getEntity();
             Entity target = zombie.getLastHurtByMob();
             ItemStack itemStack = zombie.getOffhandItem();
@@ -52,11 +54,11 @@ public class AiRevamp {
                 if (item == shield && Math.random() <= 0.3F && ZombiesReworkedConfig.SERVER.shield_use.get()) {
                     zombie.level().playSound((Player)null, zombie.blockPosition(), SoundEvents.SHIELD_BLOCK, SoundSource.HOSTILE, 1.0F, 1.0F);
                      if (!(target instanceof Player player)) {
-                         zombie.setHealth(zombie.getHealth() + 1.5F * (float) Math.PI / 4 - (float) Math.atan2(60, 120));
+                         zombie.setHealth(zombie.getHealth() + 1.5F * (float) Math.PI / 4 - (float) Math.atan(1) + (float) Mth.clamp(-10, 2, 10));
                          zombie.swing(InteractionHand.OFF_HAND);
                      }
                      else {
-                         zombie.setHealth(zombie.getHealth() + (float) player.getMainHandItem().getDamageValue() / 3);
+                         zombie.setHealth(zombie.getHealth() + (float) player.getMainHandItem().getDamageValue() / 5);
                          zombie.swing(InteractionHand.OFF_HAND);
                      }
                 }
@@ -109,6 +111,29 @@ public class AiRevamp {
     }
 
     @SubscribeEvent
+    public static void TickEvent(LivingEvent.LivingTickEvent event) {
+        boolean right = false;
+        int speed = 0;
+        if((event.getEntity() instanceof Zombie || event.getEntity() instanceof Husk || event.getEntity() instanceof Drowned) && !(event.getEntity() instanceof ZombieVillager || event.getEntity() instanceof ZombifiedPiglin)) {
+
+            Zombie zombie = (Zombie) event.getEntity();
+            if (ZombiesReworkedConfig.SERVER.sprint_goal.get() && zombie.getTarget() != null && zombie.getRandom().nextInt(35) == 0 && zombie.distanceTo(zombie.getTarget()) <= 12F && !right) {
+                right = true;
+                speed = 60;
+                if (right && speed > 0) {
+                    Objects.requireNonNull(zombie.getAttribute(Attributes.MOVEMENT_SPEED)).setBaseValue((double) 0.33F);
+                    --speed;
+                }
+                if (right && speed == 0) {
+                    Objects.requireNonNull(zombie.getAttribute(Attributes.MOVEMENT_SPEED)).setBaseValue(zombie.getAttributeBaseValue(Attributes.MOVEMENT_SPEED));
+                    right = false;
+                    speed = 0;
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
     public static void FishingADrowned(ItemFishedEvent event) {
         if (event != null) {
             if (Math.random() < 0.05 && event.getHookEntity().isOpenWaterFishing()){
@@ -136,7 +161,7 @@ public class AiRevamp {
 
 
 
-        if (event.getEntity() instanceof Zombie || event.getEntity() instanceof Husk || event.getEntity() instanceof Drowned || event.getEntity() instanceof ZombieVillager) {
+        if ((event.getEntity() instanceof Zombie || event.getEntity() instanceof Husk || event.getEntity() instanceof Drowned) && !(event.getEntity() instanceof ZombieVillager || event.getEntity() instanceof ZombifiedPiglin)) {
 
             /**
              * /// AI Stuff
@@ -156,21 +181,6 @@ public class AiRevamp {
             if (ZombiesReworkedConfig.SERVER.fast_at_night.get() && zombie.level().isNight()) {
                 Objects.requireNonNull(zombie.getAttribute(Attributes.MOVEMENT_SPEED)).setBaseValue((double) 0.28F);
             }
-
-            if (ZombiesReworkedConfig.SERVER.sprint_goal.get() && zombie.getTarget() != null && zombie.getRandom().nextInt(10) == 0 && zombie.distanceTo(zombie.getTarget()) <= 12F && !right) {
-                right = true;
-                if (right) {
-                    Objects.requireNonNull(zombie.getAttribute(Attributes.MOVEMENT_SPEED)).setBaseValue((double) 0.35F);
-                }
-                if (right && zombie.getRandom().nextInt(8) == 0) {
-                    Objects.requireNonNull(zombie.getAttribute(Attributes.MOVEMENT_SPEED)).setBaseValue(zombie.getAttributeBaseValue(Attributes.MOVEMENT_SPEED));
-                    right = false;
-                }
-            }
-
-            /**
-             * /// Block Breaking
-             */
 
 
 
