@@ -1,5 +1,6 @@
 package net.teamabyssal.extra;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -19,6 +20,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -132,6 +136,42 @@ public class AiRevamp {
             }
         }
     }
+    @SubscribeEvent
+    public static void BlockBreakingEvent(LivingEvent.LivingTickEvent event) {
+        if((event.getEntity() instanceof Zombie || event.getEntity() instanceof Husk || event.getEntity() instanceof Drowned) && !(event.getEntity() instanceof ZombieVillager || event.getEntity() instanceof ZombifiedPiglin)) {
+
+            Zombie zombie = (Zombie) event.getEntity();
+            Entity attackTarget = zombie.getTarget();
+            ItemStack itemStack = zombie.getMainHandItem();
+            Item item = itemStack.getItem();
+            Item pickaxe = Items.IRON_PICKAXE;
+            Item goldpick = Items.GOLDEN_PICKAXE;
+            if (zombie.isAlive() && attackTarget != null && zombie.hasLineOfSight(attackTarget) && zombie.distanceTo(attackTarget) <= 10F && ZombiesReworkedConfig.SERVER.doMobsBreakBlocks.get() && (item == pickaxe || item == goldpick)) {
+
+                if (zombie.horizontalCollision && net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(zombie.level(), zombie)) {
+                    boolean flag = false;
+                    AABB aabb = zombie.getBoundingBox().inflate(ZombiesReworkedConfig.SERVER.block_breaking_action_sphere.get());
+
+                    for(BlockPos blockpos : BlockPos.betweenClosed(Mth.floor(aabb.minX), Mth.floor(aabb.minY), Mth.floor(aabb.minZ), Mth.floor(aabb.maxX), Mth.floor(aabb.maxY), Mth.floor(aabb.maxZ))) {
+                        BlockState blockstate = zombie.level().getBlockState(blockpos);
+                        Block block = blockstate.getBlock();
+                        if (zombie.getRandom().nextInt(ZombiesReworkedConfig.SERVER.block_breaking_chance.get()) == 0 && blockstate.getDestroySpeed(zombie.level(), blockpos) < getDestroySpeed() && blockstate.getDestroySpeed(zombie.level(), blockpos) >= 0)  {
+                            zombie.level().playSound((Player)null, zombie.blockPosition(), SoundEvents.ZOMBIE_BREAK_WOODEN_DOOR, SoundSource.HOSTILE, 0.5F, 1.0F);
+                            flag = zombie.level().destroyBlock(blockpos, false, zombie) || flag;
+                        }
+
+                    }
+
+                }
+
+
+            }
+
+        }
+    }
+    public static int getDestroySpeed(){
+        return 5;
+    }
 
     @SubscribeEvent
     public static void FishingADrowned(ItemFishedEvent event) {
@@ -156,11 +196,6 @@ public class AiRevamp {
         ItemStack mainG = ItemStack.EMPTY;
         ItemStack offG = ItemStack.EMPTY;
 
-        boolean right = false;
-
-
-
-
         if ((event.getEntity() instanceof Zombie || event.getEntity() instanceof Husk || event.getEntity() instanceof Drowned) && !(event.getEntity() instanceof ZombieVillager || event.getEntity() instanceof ZombifiedPiglin)) {
 
             /**
@@ -183,26 +218,23 @@ public class AiRevamp {
             }
 
 
-
             ItemStack varstack = zombie.getOffhandItem();
             Item item = varstack.getItem();
             Item spyglass = Items.SPYGLASS;
 
-                if (item == spyglass && ZombiesReworkedConfig.SERVER.spyglass_use.get()) {
-                    zombie.getAttribute(Attributes.FOLLOW_RANGE).setBaseValue(zombie.getAttributeBaseValue(Attributes.FOLLOW_RANGE) + 64);
-                    if (zombie.getTarget() != null) {
-                        zombie.getLookControl().setLookAt(zombie.getTarget());
-                        if (zombie.distanceTo(zombie.getTarget()) > 32F && zombie.getRandom().nextInt(20) == 0) {
-                            zombie.level().playSound((Player)null, zombie.blockPosition(), SoundEvents.SPYGLASS_USE, SoundSource.HOSTILE, 1.0F, 1.0F);
-                        }
+            if (item == spyglass && ZombiesReworkedConfig.SERVER.spyglass_use.get()) {
+                zombie.getAttribute(Attributes.FOLLOW_RANGE).setBaseValue(zombie.getAttributeBaseValue(Attributes.FOLLOW_RANGE) + 64);
+                if (zombie.getTarget() != null) {
+                    zombie.getLookControl().setLookAt(zombie.getTarget());
+                    if (zombie.distanceTo(zombie.getTarget()) > 32F && zombie.getRandom().nextInt(20) == 0) {
+                        zombie.level().playSound((Player) null, zombie.blockPosition(), SoundEvents.SPYGLASS_USE, SoundSource.HOSTILE, 1.0F, 1.0F);
                     }
                 }
-
-
+            }
 
 
             if (ZombiesReworkedConfig.SERVER.zombie_leaps.get()) {
-                zombie.goalSelector.addGoal(0, new LeapAtTargetGoal(zombie,0.2F));
+                zombie.goalSelector.addGoal(0, new LeapAtTargetGoal(zombie, 0.2F));
             }
 
             if (ZombiesReworkedConfig.SERVER.zombie_accurate_attack_range.get()) {
@@ -220,56 +252,59 @@ public class AiRevamp {
              */
 
 
-            for (String str : ZombiesReworkedConfig.DATAGEN.zombie_helmet.get()) {
-                String[] string = str.split("\\|" );
-                ItemStack helmet = new ItemStack(Objects.requireNonNull(ForgeRegistries.ITEMS.getValue(new ResourceLocation(string[0]))));
-                if (Math.random() < Integer.parseUnsignedInt(string[1]) / 100F) {
-                    helmetG = helmet;
-                }
-            }
-            for (String str : ZombiesReworkedConfig.DATAGEN.zombie_chestplate.get()) {
-                String[] string = str.split("\\|" );
-                ItemStack chest = new ItemStack(Objects.requireNonNull(ForgeRegistries.ITEMS.getValue(new ResourceLocation(string[0]))));
-                if (Math.random() < Integer.parseUnsignedInt(string[1]) / 100F) {
-                    chestG = chest;
-                }
-            }
-            for (String str : ZombiesReworkedConfig.DATAGEN.zombie_legs.get()) {
-                String[] string = str.split("\\|" );
-                ItemStack legs = new ItemStack(Objects.requireNonNull(ForgeRegistries.ITEMS.getValue(new ResourceLocation(string[0]))));
-                if (Math.random() < Integer.parseUnsignedInt(string[1]) / 100F) {
-                    legsG = legs;
-                }
-            }
-            for (String str : ZombiesReworkedConfig.DATAGEN.zombie_feet.get()) {
-                String[] string = str.split("\\|" );
-                ItemStack boot = new ItemStack(Objects.requireNonNull(ForgeRegistries.ITEMS.getValue(new ResourceLocation(string[0]))));
-                if (Math.random() < Integer.parseUnsignedInt(string[1]) / 100F) {
-                    bootG = boot;
-                }
-            }
-            for (String str : ZombiesReworkedConfig.DATAGEN.zombie_main_hand.get()) {
-                String[] string = str.split("\\|" );
-                ItemStack main = new ItemStack(Objects.requireNonNull(ForgeRegistries.ITEMS.getValue(new ResourceLocation(string[0]))));
-                if (Math.random() < Integer.parseUnsignedInt(string[1]) / 100F && !(zombie instanceof Drowned)) {
-                    mainG = main;
-                }
-            }
-            for (String str : ZombiesReworkedConfig.DATAGEN.zombie_off_hand.get()) {
-                String[] string = str.split("\\|" );
-                ItemStack off = new ItemStack(Objects.requireNonNull(ForgeRegistries.ITEMS.getValue(new ResourceLocation(string[0]))));
-                if (Math.random() < Integer.parseUnsignedInt(string[1]) / 100F) {
-                    offG = off;
-                }
-            }
+            if (ZombiesReworkedConfig.DATAGEN.improved_equipment.get()) {
 
-            zombie.setItemSlot(EquipmentSlot.MAINHAND, mainG);
-            zombie.setItemSlot(EquipmentSlot.OFFHAND, offG);
-            zombie.setItemSlot(EquipmentSlot.HEAD, helmetG);
-            zombie.setItemSlot(EquipmentSlot.CHEST, chestG);
-            zombie.setItemSlot(EquipmentSlot.LEGS, legsG);
-            zombie.setItemSlot(EquipmentSlot.FEET, bootG);
+                for (String str : ZombiesReworkedConfig.DATAGEN.zombie_helmet.get()) {
+                    String[] string = str.split("\\|");
+                    ItemStack helmet = new ItemStack(Objects.requireNonNull(ForgeRegistries.ITEMS.getValue(new ResourceLocation(string[0]))));
+                    if (Math.random() < Integer.parseUnsignedInt(string[1]) / (float) ZombiesReworkedConfig.DATAGEN.improved_equipment_chance.get()) {
+                        helmetG = helmet;
+                    }
+                }
+                for (String str : ZombiesReworkedConfig.DATAGEN.zombie_chestplate.get()) {
+                    String[] string = str.split("\\|");
+                    ItemStack chest = new ItemStack(Objects.requireNonNull(ForgeRegistries.ITEMS.getValue(new ResourceLocation(string[0]))));
+                    if (Math.random() < Integer.parseUnsignedInt(string[1]) / (float) ZombiesReworkedConfig.DATAGEN.improved_equipment_chance.get()) {
+                        chestG = chest;
+                    }
+                }
+                for (String str : ZombiesReworkedConfig.DATAGEN.zombie_legs.get()) {
+                    String[] string = str.split("\\|");
+                    ItemStack legs = new ItemStack(Objects.requireNonNull(ForgeRegistries.ITEMS.getValue(new ResourceLocation(string[0]))));
+                    if (Math.random() < Integer.parseUnsignedInt(string[1]) / (float) ZombiesReworkedConfig.DATAGEN.improved_equipment_chance.get()) {
+                        legsG = legs;
+                    }
+                }
+                for (String str : ZombiesReworkedConfig.DATAGEN.zombie_feet.get()) {
+                    String[] string = str.split("\\|");
+                    ItemStack boot = new ItemStack(Objects.requireNonNull(ForgeRegistries.ITEMS.getValue(new ResourceLocation(string[0]))));
+                    if (Math.random() < Integer.parseUnsignedInt(string[1]) / (float) ZombiesReworkedConfig.DATAGEN.improved_equipment_chance.get()) {
+                        bootG = boot;
+                    }
+                }
+                for (String str : ZombiesReworkedConfig.DATAGEN.zombie_main_hand.get()) {
+                    String[] string = str.split("\\|");
+                    ItemStack main = new ItemStack(Objects.requireNonNull(ForgeRegistries.ITEMS.getValue(new ResourceLocation(string[0]))));
+                    if (Math.random() < Integer.parseUnsignedInt(string[1]) / (float) ZombiesReworkedConfig.DATAGEN.improved_equipment_chance.get() && !(zombie instanceof Drowned)) {
+                        mainG = main;
+                    }
+                }
+                for (String str : ZombiesReworkedConfig.DATAGEN.zombie_off_hand.get()) {
+                    String[] string = str.split("\\|");
+                    ItemStack off = new ItemStack(Objects.requireNonNull(ForgeRegistries.ITEMS.getValue(new ResourceLocation(string[0]))));
+                    if (Math.random() < Integer.parseUnsignedInt(string[1]) / (float) ZombiesReworkedConfig.DATAGEN.improved_equipment_chance.get()) {
+                        offG = off;
+                    }
+                }
 
+                zombie.setItemSlot(EquipmentSlot.MAINHAND, mainG);
+                zombie.setItemSlot(EquipmentSlot.OFFHAND, offG);
+                zombie.setItemSlot(EquipmentSlot.HEAD, helmetG);
+                zombie.setItemSlot(EquipmentSlot.CHEST, chestG);
+                zombie.setItemSlot(EquipmentSlot.LEGS, legsG);
+                zombie.setItemSlot(EquipmentSlot.FEET, bootG);
+
+            }
         }
     }
 
