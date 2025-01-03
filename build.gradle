@@ -8,7 +8,7 @@ plugins {
 }
 
 
-version = '1.20.1-1.0.5'
+version = '1.19.2-1.1.5'
 group = 'net.teamabyssal.zombies_reworked' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'zombies_reworked'
 
@@ -137,6 +137,7 @@ repositories {
 
     maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
     mavenCentral()
+    maven { url "https://www.cursemaven.com" }
     // If you have mod jar dependencies in ./libs, you can declare them as a repository like so.
     // See https://docs.gradle.org/current/userguide/declaring_repositories.html#sub:flat_dir_resolver
     // flatDir {
@@ -146,7 +147,8 @@ repositories {
 
 dependencies {
 
-    minecraft 'net.minecraftforge:forge:1.20.1-47.2.19'
+    minecraft 'net.minecraftforge:forge:1.19.2-43.4.12'
+
     // Specify the version of Minecraft to use.
     // Any artifact can be supplied so long as it has a "userdev" classifier artifact and is a compatible patcher artifact.
     // The "userdev" classifier will be requested and setup by ForgeGradle.
@@ -167,6 +169,8 @@ dependencies {
     // For more info:
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
+
+    implementation fg.deobf("curse.maven:clockworklib-1009328:5292775")
 }
 
 // Example for how to get properties into the manifest for reading at runtime.

@@ -46,6 +46,10 @@ public class ZombiesReworkedConfig {
         public final ForgeConfigSpec.ConfigValue<Integer> block_breaking_chance;
         public final ForgeConfigSpec.ConfigValue<Double> block_breaking_action_sphere;
         public final ForgeConfigSpec.ConfigValue<Boolean> doMobsBreakBlocks;
+        public final ForgeConfigSpec.ConfigValue<Boolean> zombiesImmuneToSun;
+        public final ForgeConfigSpec.ConfigValue<Boolean> zombieHordeSpawn;
+        public final ForgeConfigSpec.ConfigValue<Integer> mobSpawnAttempts;
+        public final ForgeConfigSpec.ConfigValue<Integer> ticksBeforeHordeSpawning;
 
         public Server(ForgeConfigSpec.Builder builder) {
 
@@ -58,6 +62,10 @@ public class ZombiesReworkedConfig {
             this.doMobsBreakBlocks = builder.comment("Default true").define("Should the zombies break blocks?",true);
             this.block_breaking_chance = builder.comment("Default 90").defineInRange("Chance of the block breaking on tick, 120 ~= 0,8%", 120, 60, 200);
             this.block_breaking_action_sphere = builder.comment("Default 0.15").defineInRange("Area of the blocks that the zombies can break, the bigger the number, the more the blocks a mob can destroy in one go", 0.15, 0.05, 0.5);
+            this.zombiesImmuneToSun = builder.comment("Default true").define("Should the zombies now be IMMUNE to sunlight damage?",true);
+            this.zombieHordeSpawn = builder.comment("Default true").define("Should the zombies form hordes and spawn from time to time?",true);
+            this.mobSpawnAttempts = builder.comment("Default 10").define("Number of Zombies Spawning in a Horde",10);
+            this.ticksBeforeHordeSpawning = builder.comment("Default 3500").define("Ticks before the zombie horde spawning",3500);
             builder.pop();
 
             builder.push("Items that the zombies can use");

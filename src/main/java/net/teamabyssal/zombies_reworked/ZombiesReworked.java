@@ -1,6 +1,7 @@
 package net.teamabyssal.zombies_reworked;
 
 import com.mojang.logging.LogUtils;
+import net.asestefan.api.ClockworkLib;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -20,7 +21,8 @@ public class ZombiesReworked {
     public static final String MODID = "zombies_reworked";
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    public ZombiesReworked() {
+    public ZombiesReworked()
+    {
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ZombiesReworkedConfig.DATAGEN_SPEC ,"ZombiesReworked-data.toml");
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ZombiesReworkedConfig.SERVER_SPEC ,"ZombiesReworked-config.toml");
@@ -34,9 +36,6 @@ public class ZombiesReworked {
         MinecraftForge.EVENT_BUS.register(this);
 
         modEventBus.addListener(this::commonSetup);
-
-
-
 
 
 
