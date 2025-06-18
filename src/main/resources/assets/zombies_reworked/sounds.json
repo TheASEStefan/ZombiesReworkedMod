@@ -1,0 +1,9 @@
+{
+  "zombie_horde_spawn": {
+    "subtitles": "subtitles.zombies_reworked.zombie_horde_spawn",
+    "category": "hostile",
+    "sounds": [
+      "zombies_reworked:zombie_horde_spawn"
+    ]
+  }
+}

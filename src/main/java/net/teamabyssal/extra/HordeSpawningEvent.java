@@ -23,6 +23,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.material.Fluids;
 import net.teamabyssal.config.ZombiesReworkedConfig;
+import net.teamabyssal.zombies_reworked.sound.ModdedSounds;
 
 
 /**
@@ -106,7 +107,7 @@ public class HordeSpawningEvent
                                             {
                                                 this.spawnHordeEntity(level, blockpos$mutableblockpos, random, false);
                                                 player.displayClientMessage(Component.literal("The Dead have risen."), true);
-                                                player.level.playSound((Player) null, player.blockPosition(), SoundEvents.ZOMBIE_BREAK_WOODEN_DOOR, SoundSource.MASTER, 1.0F, 1.0F);
+                                                player.level.playSound(null, player.blockPosition(), ModdedSounds.ZOMEBIE_HORDE_SPAWN.get(), SoundSource.HOSTILE, 0.5F, 1.0F);
                                             }
 
                                             blockpos$mutableblockpos.setX(blockpos$mutableblockpos.getX() + random.nextInt(5) - random.nextInt(5));
