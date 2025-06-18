@@ -30,7 +30,7 @@ public class LeapGoal extends Goal {
         {
             double d0 = this.mob.distanceToSqr(this.target);
             if (d0 > 32.0D) {
-                if (!this.mob.isOnGround()) {
+                if (!this.mob.onGround()) {
                     return false;
                 } else {
                     return this.mob.getRandom().nextInt(reducedTickDelay(5)) == 0;
@@ -43,7 +43,7 @@ public class LeapGoal extends Goal {
     }
 
     public boolean canContinueToUse() {
-        return !this.mob.isOnGround();
+        return !this.mob.onGround();
     }
 
     @Override

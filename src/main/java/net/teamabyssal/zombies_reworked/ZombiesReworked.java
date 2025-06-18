@@ -14,6 +14,8 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
 import net.teamabyssal.config.ZombiesReworkedConfig;
+import net.teamabyssal.zombies_reworked.sound.ModdedSounds;
+
 import org.slf4j.Logger;
 
 @Mod(ZombiesReworked.MODID)
@@ -31,12 +33,14 @@ public class ZombiesReworked {
 
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
+
         ModLoadingContext context = ModLoadingContext.get();
 
         MinecraftForge.EVENT_BUS.register(this);
+        ModdedSounds.register(modEventBus);
 
         modEventBus.addListener(this::commonSetup);
-
+    
 
 
     }

@@ -27,8 +27,8 @@ public class Zombification {
 
     @SubscribeEvent
     public static void onEntityDeath(LivingDeathEvent event) {
-        if (event != null && event.getEntity() != null && !event.getEntity().level.isClientSide) {
-            Level world = event.getEntity().level;
+        if (event != null && event.getEntity() != null && !event.getEntity().level().isClientSide) {
+            Level world = event.getEntity().level();
             double x = event.getEntity().getX();
             double y = event.getEntity().getY();
             double z = event.getEntity().getZ();
@@ -62,7 +62,7 @@ public class Zombification {
                 zombie.playSound(SoundEvents.ZOMBIE_INFECT);
 
 
-                if (player.level instanceof ServerLevel server) {
+                if (player.level() instanceof ServerLevel server) {
                     server.sendParticles(ParticleTypes.EXPLOSION, player.getX(), player.getY() + 1, player.getZ(), 4, 0.4, 1.0, 0.4, 0);
                 }
             }
@@ -72,7 +72,7 @@ public class Zombification {
                 zombieVillager.moveTo(event.getEntity().getX(), event.getEntity().getY(), event.getEntity().getZ());
                 world.addFreshEntity(zombieVillager);
                 zombieVillager.playSound(SoundEvents.ZOMBIE_INFECT);
-                if (villager.level instanceof ServerLevel server) {
+                if (villager.level() instanceof ServerLevel server) {
                     server.sendParticles(ParticleTypes.EXPLOSION, villager.getX(), villager.getY() + 1, villager.getZ(), 4, 0.4, 1.0, 0.4, 0);
                 }
             }

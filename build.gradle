@@ -8,7 +8,7 @@ plugins {
 }
 
 
-version = '1.19.2-1.1.5'
+version = '1.20.1-1.1.5'
 group = 'net.teamabyssal.zombies_reworked' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'zombies_reworked'
 
@@ -147,7 +147,7 @@ repositories {
 
 dependencies {
 
-    minecraft 'net.minecraftforge:forge:1.19.2-43.4.12'
+    minecraft 'net.minecraftforge:forge:1.20.1-47.2.0'
 
     // Specify the version of Minecraft to use.
     // Any artifact can be supplied so long as it has a "userdev" classifier artifact and is a compatible patcher artifact.

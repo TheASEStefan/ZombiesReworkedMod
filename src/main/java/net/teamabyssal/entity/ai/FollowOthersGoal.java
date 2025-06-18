@@ -29,7 +29,7 @@ public class FollowOthersGoal extends Goal {
     }
 
     public  FollowOthersGoal(PathfinderMob mob, double speedModifier, Class<? extends PathfinderMob> partnerClass, @Nullable Predicate<LivingEntity> en){
-        this.level = mob.level;
+        this.level = mob.level();
         this.mob = mob;
         this.speedModifier = speedModifier;
         this.partnerClass = partnerClass;
