@@ -105,8 +105,7 @@ public class HordeSpawningEvent
                                             else
                                             {
                                                 this.spawnHordeEntity(level, blockpos$mutableblockpos, random, false);
-                                                player.displayClientMessage(Component.literal("The Dead have risen."), true);
-                                                player.level.playSound((Player) null, player.blockPosition(), SoundEvents.ZOMBIE_BREAK_WOODEN_DOOR, SoundSource.MASTER, 1.0F, 1.0F);
+                                                player.displayClientMessage(Component.literal("The Dead... have risen..."), true);
                                             }
 
                                             blockpos$mutableblockpos.setX(blockpos$mutableblockpos.getX() + random.nextInt(5) - random.nextInt(5));
